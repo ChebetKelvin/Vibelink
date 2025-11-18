@@ -1,3 +1,28 @@
-import { index } from "@react-router/dev/routes";
+import { index, route } from "@react-router/dev/routes";
 
-export default [index("routes/home.jsx")];
+export default [
+  index("routes/home.jsx"),
+  route("events", "routes/events.jsx"),
+  route("login", "routes/login.jsx"),
+  route("signup", "routes/signup.jsx"),
+  route("categories/:category", "routes/category.jsx"),
+  route("events/:id", "routes/eventDetail.jsx"),
+  route("add-event", "routes/addEvent.jsx"),
+  route("contact", "routes/contact.jsx"),
+  route("/logout", "routes/logout.jsx"),
+  route("admin", "routes/admin.jsx"),
+  route("admin/events", "routes/adminEvent.jsx"),
+  route("admin/events/:id", "routes/eventDetailAdmin.jsx"),
+  route("admin/user", "routes/adminUsers.jsx"),
+  route("admin/users/:id", "routes/adminUserDetails.jsx"),
+  route("admin/reports", "routes/report.jsx"),
+  route("/tools", "routes/tools.jsx"),
+  route("pricing", "routes/pricing.jsx"),
+  route("pricing/error", "routes/pricingError.jsx"),
+  route("pricing/success", "routes/pricingSuccess.jsx"),
+  route("pricing/cancel", "routes/pricingCancel.jsx"),
+  route("/host-faq", "routes/faq.jsx"),
+  route("about", "routes/about.jsx"),
+  route("how-it-works", "routes/howItWorks.jsx"),
+  route("privacy", "routes/privacy.jsx"),
+];
