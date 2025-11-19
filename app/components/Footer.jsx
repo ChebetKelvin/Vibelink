@@ -13,7 +13,6 @@ const links = {
   company: [
     { name: "About VibeLink", href: "/about" },
     { name: "How It Works", href: "/how-it-works" },
-    { name: "Careers", href: "/careers" },
     { name: "Contact Us", href: "/contact" },
   ],
   organizers: [

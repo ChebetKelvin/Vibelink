@@ -25,4 +25,5 @@ export default [
   route("about", "routes/about.jsx"),
   route("how-it-works", "routes/howItWorks.jsx"),
   route("privacy", "routes/privacy.jsx"),
+  route("profile", "routes/profile.jsx"),
 ];

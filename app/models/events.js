@@ -54,3 +54,71 @@ export async function getEventStats() {
     return { total: 0, approved: 0, pending: 0, rejected: 0 };
   }
 }
+
+// UPDATED FUNCTIONS - Using MongoDB native driver syntax
+export async function getEventsByOrganizer(organizerEmail) {
+  try {
+    const events = await collection
+      .find({
+        contact: organizerEmail,
+      })
+      .sort({ createdAt: -1 })
+      .toArray();
+    return events;
+  } catch (error) {
+    console.error("Error fetching events by organizer:", error);
+    return [];
+  }
+}
+
+export async function getUserEventStats(organizerEmail) {
+  try {
+    const events = await getEventsByOrganizer(organizerEmail);
+
+    const stats = {
+      eventsCreated: events.length,
+      eventsAttended: 0, // You can implement attendance tracking later
+      approvedEvents: events.filter((e) => e.status === "approved").length,
+      pendingEvents: events.filter((e) => e.status === "pending").length,
+      rejectedEvents: events.filter((e) => e.status === "rejected").length,
+    };
+
+    return stats;
+  } catch (error) {
+    console.error("Error getting user event stats:", error);
+    return {
+      eventsCreated: 0,
+      eventsAttended: 0,
+      approvedEvents: 0,
+      pendingEvents: 0,
+      rejectedEvents: 0,
+    };
+  }
+}
+
+export async function getUserFavoriteCategories(organizerEmail) {
+  try {
+    const events = await getEventsByOrganizer(organizerEmail);
+
+    if (events.length === 0) {
+      return ["No events yet"];
+    }
+
+    // Count categories
+    const categoryCount = {};
+    events.forEach((event) => {
+      categoryCount[event.category] = (categoryCount[event.category] || 0) + 1;
+    });
+
+    // Get top 3 categories
+    const favoriteCategories = Object.entries(categoryCount)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 3)
+      .map(([category]) => category);
+
+    return favoriteCategories;
+  } catch (error) {
+    console.error("Error getting favorite categories:", error);
+    return ["Error loading categories"];
+  }
+}

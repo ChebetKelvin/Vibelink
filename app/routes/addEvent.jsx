@@ -1,11 +1,8 @@
-// src/pages/AddEvent.jsx
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Form, redirect, useActionData, useLoaderData } from "react-router";
 import { addEvent } from "../models/events";
 import { getSession } from "../.server/session";
-
-const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10 MB
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -22,6 +19,7 @@ export async function action({ request }) {
     "durationMinutes",
     "description",
     "isFree",
+    "imageUrl", // Now imageUrl is required
   ];
 
   requiredFields.forEach((field) => {
@@ -36,26 +34,19 @@ export async function action({ request }) {
     );
   }
 
-  const imageFile = formData.get("image");
-  if (!imageFile || imageFile.size === 0) {
-    errors.push("Event image is required");
+  // Validate image URL format
+  const imageUrl = formData.get("imageUrl");
+  if (imageUrl) {
+    try {
+      new URL(imageUrl); // This will throw if not a valid URL
+    } catch (error) {
+      errors.push("Please enter a valid image URL");
+    }
   }
 
   if (errors.length > 0) return { errors };
 
-  // Convert the uploaded file to Buffer (Node-compatible)
-  let imageBuffer;
-  if (imageFile.arrayBuffer) {
-    const arrayBuffer = await imageFile.arrayBuffer();
-    imageBuffer = Buffer.from(arrayBuffer);
-  } else if (imageFile.buffer) {
-    // Some server parsers provide a buffer directly
-    imageBuffer = imageFile.buffer;
-  } else {
-    throw new Error("Cannot read uploaded file");
-  }
-
-  // Now create the event
+  // Now create the event with imageUrl instead of image upload
   const newEvent = {
     title: formData.get("title"),
     category: formData.get("category"),
@@ -73,11 +64,8 @@ export async function action({ request }) {
       ? []
       : [{ tier: "Standard", price: Number(ticketPrice) }],
     status: "pending",
-    image: {
-      data: imageBuffer,
-      contentType: imageFile.type,
-      filename: imageFile.name,
-    },
+    imageUrl: imageUrl, // Simple URL string instead of complex image object
+    createdAt: new Date(),
   };
 
   await addEvent(newEvent);
@@ -104,16 +92,18 @@ export default function AddEvent() {
   const actionData = useActionData();
   let { user } = useLoaderData();
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
+  const handleImageUrlChange = (e) => {
+    const url = e.target.value;
+    if (url) {
+      setImagePreview(url);
+    } else {
+      setImagePreview(null);
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-linear-to-br from-slate-50 to-blue-50/30">
-      {/* Hero Section */}
+      {/* Hero Section - unchanged */}
       <section
         className="relative h-[70vh] flex items-center justify-center bg-cover bg-center overflow-hidden"
         style={{
@@ -184,7 +174,7 @@ export default function AddEvent() {
         </motion.div>
       </section>
 
-      {/* Intro Section */}
+      {/* Intro Section - unchanged */}
       <section className="py-20 px-6 md:px-20 text-center relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute top-10 left-10 w-4 h-4 bg-[#b8932f]/20 rounded-full"></div>
@@ -280,8 +270,7 @@ export default function AddEvent() {
               )}
               <Form
                 method="post"
-                encType="multipart/form-data"
-                className="space-y-8"
+                className="space-y-8" // Remove encType="multipart/form-data"
               >
                 {/* Form Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -449,51 +438,48 @@ export default function AddEvent() {
                     />
                   </div>
 
-                  {/* Image Upload */}
+                  {/* Image URL - REPLACED FILE UPLOAD */}
                   <div className="md:col-span-2">
                     <label className="block text-gray-800 font-semibold mb-3 text-lg">
-                      Event Image
+                      Event Image URL
                     </label>
-                    <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center hover:border-[#b8932f] transition-colors bg-white/30">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="hidden"
-                        id="image-upload"
-                        name="image"
-                        required
-                      />
-                      <label htmlFor="image-upload" className="cursor-pointer">
-                        <p className="text-gray-600 font-medium">
-                          Click to upload an event image
-                        </p>
-                        <p className="text-gray-500 text-sm mt-1">
-                          PNG, JPG, WEBP up to 10MB
-                        </p>
-                      </label>
-                    </div>
-                    {imagePreview && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="mt-6"
-                      >
-                        <img
-                          src={imagePreview}
-                          alt="Preview"
-                          className="rounded-2xl shadow-lg max-h-80 w-full object-cover border border-gray-200"
-                        />
-                      </motion.div>
-                    )}
+                    <input
+                      type="url"
+                      name="imageUrl"
+                      placeholder="https://example.com/event-image.jpg"
+                      onChange={handleImageUrlChange}
+                      className="w-full border text-gray-600 border-gray-200 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#b8932f]/20 focus:border-[#b8932f] outline-none transition-all bg-white/50 backdrop-blur-sm shadow-sm"
+                      required
+                    />
+                    <p className="text-gray-500 text-sm mt-2">
+                      Enter a direct URL to your event image
+                    </p>
                   </div>
                 </div>
+
+                {/* Image Preview */}
+                {imagePreview && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="mt-6 text-center"
+                  >
+                    <p className="text-gray-800 font-semibold mb-3">
+                      Image Preview
+                    </p>
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="rounded-2xl shadow-lg max-h-80 w-full object-cover border border-gray-200 mx-auto"
+                    />
+                  </motion.div>
+                )}
 
                 {/* Submit Button */}
                 <div className="text-center pt-6">
                   <button
                     type="submit"
-                    className="group linear-to-r from-[#095075] to-[#0a6b9a] hover:from-[#07405d] hover:to-[#095075] text-black font-semibold text-lg px-12 py-4 rounded-2xl shadow-2xl shadow-[#095075]/30 hover:shadow-[#095075]/40 transition-all duration-300 transform hover:-translate-y-1 min-w-48"
+                    className="group bg-linear-to-r from-[#095075] to-[#0a6b9a] hover:from-[#07405d] hover:to-[#095075] text-white font-semibold text-lg px-12 py-4 rounded-2xl shadow-2xl shadow-[#095075]/30 hover:shadow-[#095075]/40 transition-all duration-300 transform hover:-translate-y-1 min-w-48"
                   >
                     <span className="flex items-center justify-center gap-3">
                       Publish Event

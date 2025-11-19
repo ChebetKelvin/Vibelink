@@ -30,21 +30,35 @@ export async function loader({ params }) {
 
 export async function action({ request, params }) {
   const formData = await request.formData();
-  const actionValue = formData.get("_action");
-  const [action, id] = actionValue.split("-");
+  const action = formData.get("_action");
 
-  switch (action) {
-    case "approve":
-      await updateEvent(id, { status: "approved" });
-      break;
-    case "reject":
-      await updateEvent(id, { status: "rejected" });
-      break;
-    case "delete":
-      await deleteEvent(id);
-      break;
-    default:
-      break;
+  console.log("Action received:", { action, eventId: params.id });
+
+  if (!action) {
+    throw new Response("Action required", { status: 400 });
+  }
+
+  if (!params.id) {
+    throw new Response("Event ID required", { status: 400 });
+  }
+
+  try {
+    switch (action) {
+      case "approve":
+        await updateEvent(params.id, { status: "approved" });
+        break;
+      case "reject":
+        await updateEvent(params.id, { status: "rejected" });
+        break;
+      case "delete":
+        await deleteEvent(params.id);
+        break;
+      default:
+        throw new Response("Invalid action", { status: 400 });
+    }
+  } catch (error) {
+    console.error("Action error:", error);
+    throw new Response("Failed to process action", { status: 500 });
   }
 
   return null;
@@ -175,14 +189,16 @@ export default function EventDetails() {
                     Manage event status and permissions
                   </p>
                 </div>
+                // In your form buttons - convert _id to string
                 <Form
                   method="post"
                   className="flex items-center space-x-3 mt-4 sm:mt-0"
                 >
                   {event.status === "pending" && (
                     <button
+                      onClick={(e) => e.stopPropagation()}
                       name="_action"
-                      value={`approve-${event._id}`}
+                      value="approve"
                       className="flex items-center space-x-2 px-4 py-2.5 bg-green-50 hover:bg-green-100 text-green-700 rounded-xl transition-all duration-200 hover:shadow-sm border border-green-200 group/approve"
                     >
                       <CheckCircle
@@ -195,8 +211,9 @@ export default function EventDetails() {
 
                   {event.status !== "rejected" && (
                     <button
+                      onClick={(e) => e.stopPropagation()}
                       name="_action"
-                      value={`reject-${event._id}`}
+                      value="reject"
                       className="flex items-center space-x-2 px-4 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-xl transition-all duration-200 hover:shadow-sm border border-amber-200 group/reject"
                     >
                       <XCircle
@@ -208,8 +225,9 @@ export default function EventDetails() {
                   )}
 
                   <button
+                    onClick={(e) => e.stopPropagation()}
                     name="_action"
-                    value={`delete-${event._id}`}
+                    value="delete"
                     className="flex items-center space-x-2 px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-xl transition-all duration-200 hover:shadow-sm border border-red-200 group/delete"
                   >
                     <Trash2
