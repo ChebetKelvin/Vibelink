@@ -1,5 +1,6 @@
-import { Mail, Lock, User } from "lucide-react";
-import { Form, Link, redirect, useActionData, useNavigate } from "react-router"; // Fixed import
+import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import { Form, Link, redirect, useActionData, useNavigate } from "react-router";
+import { useState } from "react";
 import {
   validateEmail,
   validatePassword,
@@ -66,6 +67,18 @@ export default function SignUpPage() {
   const navigate = useNavigate();
   const isSubmitting = navigate.state === "submitting";
 
+  // State for password visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   // DRY focus/blur handlers
   const handleFocus = (e) => {
     e.target.classList.add("ring-2", "ring-offset-1", "ring-yellow-300");
@@ -80,20 +93,14 @@ export default function SignUpPage() {
     }
   };
 
-  // Input class generator
-  const inputClass = (error) =>
-    `w-full pl-10 pr-4 py-3 text-gray-700 border rounded-xl focus:outline-none transition duration-150 ${
-      error ? "border-red-500" : "border-gray-300"
-    }`;
-
   // Success view
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 font-sans p-4">
-        <div className="bg-white p-8 sm:p-10 rounded-2xl shadow-2xl text-center max-w-md w-full border border-gray-200">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-green-400 via-blue-500 to-purple-600 font-sans p-4">
+        <div className="bg-white/30 backdrop-blur-lg p-8 sm:p-10 rounded-2xl shadow-2xl text-center max-w-md w-full border border-white/50">
+          <div className="w-16 h-16 bg-green-100/80 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
             <svg
-              className="w-8 h-8 text-green-500"
+              className="w-8 h-8 text-green-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -106,15 +113,15 @@ export default function SignUpPage() {
               />
             </svg>
           </div>
-          <h1 className="text-3xl font-extrabold text-gray-900 mb-4">
+          <h1 className="text-3xl font-extrabold text-white mb-4 drop-shadow-lg">
             Account Created Successfully!
           </h1>
-          <p className="text-lg text-gray-600 mb-6">
+          <p className="text-lg text-white/90 mb-6 drop-shadow-md">
             Welcome to VibeLink! You can now sign in to your account.
           </p>
           <Link
             to="/login"
-            className="inline-block px-8 py-3 bg-[#095075] text-white rounded-xl shadow-md hover:bg-[#063f5b] transition duration-200 font-semibold"
+            className="inline-block px-8 py-3 bg-white/30 backdrop-blur-sm text-white rounded-xl shadow-lg hover:bg-white/40 transition duration-200 font-semibold border border-white/30"
           >
             Go to Login
           </Link>
@@ -126,11 +133,11 @@ export default function SignUpPage() {
   // Form error view (general form error)
   if (errors.form) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 font-sans p-4">
-        <div className="bg-white p-8 sm:p-10 rounded-2xl shadow-2xl text-center max-w-md w-full border border-gray-200">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-green-400 via-blue-500 to-purple-600 font-sans p-4">
+        <div className="bg-white/30 backdrop-blur-lg p-8 sm:p-10 rounded-2xl shadow-2xl text-center max-w-md w-full border border-white/50">
+          <div className="w-16 h-16 bg-red-100/80 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
             <svg
-              className="w-8 h-8 text-red-500"
+              className="w-8 h-8 text-red-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -143,13 +150,15 @@ export default function SignUpPage() {
               />
             </svg>
           </div>
-          <h1 className="text-3xl font-extrabold text-red-600 mb-4">
+          <h1 className="text-3xl font-extrabold text-red-300 mb-4 drop-shadow-lg">
             Error Creating Account
           </h1>
-          <p className="text-lg text-gray-600 mb-6">{errors.form}</p>
+          <p className="text-lg text-white/90 mb-6 drop-shadow-md">
+            {errors.form}
+          </p>
           <Link
             to="/signup"
-            className="inline-block px-8 py-3 bg-red-600 text-white rounded-xl shadow-md hover:bg-red-700 transition duration-200 font-semibold"
+            className="inline-block px-8 py-3 bg-red-500/80 backdrop-blur-sm text-white rounded-xl shadow-lg hover:bg-red-600/80 transition duration-200 font-semibold border border-red-300/50"
           >
             Try Again
           </Link>
@@ -160,17 +169,17 @@ export default function SignUpPage() {
 
   // Main signup form
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 font-sans p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-green-400 via-blue-500 to-purple-600 font-sans p-4">
       <div className="w-full max-w-md">
         <div
-          className="bg-white p-8 sm:p-10 rounded-2xl shadow-2xl border-t-4"
-          style={{ borderColor: primaryColor }}
+          className="bg-white/30 backdrop-blur-lg p-8 sm:p-10 rounded-2xl shadow-2xl border-t-4 border-white/50"
+          style={{ borderColor: primaryColor + "CC" }}
         >
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-extrabold text-gray-900 mb-2">
+            <h1 className="text-4xl font-extrabold text-white mb-2 drop-shadow-lg">
               Create Account
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-white/90 drop-shadow-md">
               Join now to unlock all{" "}
               <span
                 className="italic font-semibold"
@@ -186,19 +195,19 @@ export default function SignUpPage() {
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-white mb-2 drop-shadow-sm"
               >
                 Full Name
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <User className="absolute left-3 top-3 w-5 h-5 text-white/70" />
                 <input
                   id="name"
                   name="name"
                   type="text"
                   required
                   placeholder="John Doe"
-                  className={inputClass(errors.name)}
+                  className="w-full pl-10 pr-4 py-3 text-white bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-white/50 outline-none transition duration-150 placeholder:text-white/60"
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? "name-error" : undefined}
                   onFocus={handleFocus}
@@ -206,7 +215,10 @@ export default function SignUpPage() {
                 />
               </div>
               {errors.name && (
-                <p id="name-error" className="text-red-500 text-sm mt-1">
+                <p
+                  id="name-error"
+                  className="text-red-300 text-sm mt-1 drop-shadow-sm"
+                >
                   {errors.name}
                 </p>
               )}
@@ -216,19 +228,19 @@ export default function SignUpPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-white mb-2 drop-shadow-sm"
               >
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <Mail className="absolute left-3 top-3 w-5 h-5 text-white/70" />
                 <input
                   id="email"
                   name="email"
                   type="email"
                   required
                   placeholder="you@example.com"
-                  className={inputClass(errors.email)}
+                  className="w-full pl-10 pr-4 py-3 text-white bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-white/50 outline-none transition duration-150 placeholder:text-white/60"
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? "email-error" : undefined}
                   onFocus={handleFocus}
@@ -236,7 +248,10 @@ export default function SignUpPage() {
                 />
               </div>
               {errors.email && (
-                <p id="email-error" className="text-red-500 text-sm mt-1">
+                <p
+                  id="email-error"
+                  className="text-red-300 text-sm mt-1 drop-shadow-sm"
+                >
                   {errors.email}
                 </p>
               )}
@@ -246,19 +261,19 @@ export default function SignUpPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-white mb-2 drop-shadow-sm"
               >
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <Lock className="absolute left-3 top-3 w-5 h-5 text-white/70" />
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
                   placeholder="••••••••"
-                  className={inputClass(errors.password)}
+                  className="w-full pl-10 pr-12 py-3 text-white bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-white/50 outline-none transition duration-150 placeholder:text-white/60"
                   aria-invalid={!!errors.password}
                   aria-describedby={
                     errors.password ? "password-error" : undefined
@@ -266,9 +281,25 @@ export default function SignUpPage() {
                   onFocus={handleFocus}
                   onBlur={(e) => handleBlur(e, errors.password)}
                 />
+                {/* Password visibility toggle button */}
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-3 top-3 p-1 text-white/70 hover:text-white transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-md"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
               </div>
               {errors.password && (
-                <p id="password-error" className="text-red-500 text-sm mt-1">
+                <p
+                  id="password-error"
+                  className="text-red-300 text-sm mt-1 drop-shadow-sm"
+                >
                   {errors.password}
                 </p>
               )}
@@ -278,19 +309,19 @@ export default function SignUpPage() {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-white mb-2 drop-shadow-sm"
               >
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <Lock className="absolute left-3 top-3 w-5 h-5 text-white/70" />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   required
                   placeholder="••••••••"
-                  className={inputClass(errors.confirmPassword)}
+                  className="w-full pl-10 pr-12 py-3 text-white bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-white/50 outline-none transition duration-150 placeholder:text-white/60"
                   aria-invalid={!!errors.confirmPassword}
                   aria-describedby={
                     errors.confirmPassword ? "confirmPassword-error" : undefined
@@ -298,11 +329,26 @@ export default function SignUpPage() {
                   onFocus={handleFocus}
                   onBlur={(e) => handleBlur(e, errors.confirmPassword)}
                 />
+                {/* Confirm Password visibility toggle button */}
+                <button
+                  type="button"
+                  onClick={toggleConfirmPasswordVisibility}
+                  className="absolute right-3 top-3 p-1 text-white/70 hover:text-white transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-md"
+                  aria-label={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
               </div>
               {errors.confirmPassword && (
                 <p
                   id="confirmPassword-error"
-                  className="text-red-500 text-sm mt-1"
+                  className="text-red-300 text-sm mt-1 drop-shadow-sm"
                 >
                   {errors.confirmPassword}
                 </p>
@@ -314,8 +360,11 @@ export default function SignUpPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-md text-base font-medium text-white hover:bg-[#063f5b] focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200 transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ backgroundColor: primaryColor }}
+                className="w-full flex justify-center items-center py-3 px-4 border border-white/30 rounded-xl shadow-lg text-base font-medium text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 transition duration-200 transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 backdrop-blur-sm"
+                style={{
+                  backgroundColor: primaryColor + "CC",
+                  boxShadow: `0 4px 15px rgba(255, 255, 255, 0.3)`,
+                }}
               >
                 {isSubmitting ? "Creating..." : "Create Account"}
               </button>
@@ -324,11 +373,11 @@ export default function SignUpPage() {
 
           {/** Already have account */}
           <div className="mt-8 text-center text-sm">
-            <p className="text-gray-600">
+            <p className="text-white/90 drop-shadow-sm">
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="font-bold hover:underline transition duration-150"
+                className="font-bold hover:underline transition duration-150 text-white"
                 style={{ color: accentColor }}
               >
                 Sign in here
