@@ -11,18 +11,18 @@ import {
 import { validateText, validatePassword } from "../.server/validation";
 import { useState } from "react";
 
-const primaryColor = "#095075"; // Dark Blue
-const accentColor = "#b8932f"; // Gold/Bronze
+let primaryColor = "#095075"; // Dark Blue
+let accentColor = "#b8932f"; // Gold/Bronze
 
 export async function action({ request }) {
-  const session = await getSession(request.headers.get("Cookie"));
-  const formData = await request.formData();
+  let session = await getSession(request.headers.get("Cookie"));
+  let formData = await request.formData();
 
-  const email = formData.get("email");
-  const password = formData.get("password");
+  let email = formData.get("email");
+  let password = formData.get("password");
 
   // ✅ Validate input fields
-  const fieldErrors = {
+  let fieldErrors = {
     email: validateText(email),
     password: validatePassword(password),
   };
@@ -32,7 +32,7 @@ export async function action({ request }) {
   }
 
   // ✅ Check if user exists
-  const user = await getUserByEmail(email);
+  let user = await getUserByEmail(email);
   if (!user) {
     setErrorMessage(session, "Invalid credentials. Try again.");
     return redirect("/login", {
@@ -41,7 +41,7 @@ export async function action({ request }) {
   }
 
   // ✅ Compare password
-  const validPassword = await bcrypt.compare(password, user.password);
+  let validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) {
     setErrorMessage(session, "Invalid credentials. Try again.");
     return redirect("/login", {
@@ -60,7 +60,7 @@ export async function action({ request }) {
   setSuccessMessage(session, `Welcome back, ${user.name}!`);
 
   // ✅ Redirect based on role
-  const redirectTo = user.role === "admin" ? "/admin" : "/";
+  let redirectTo = user.role === "admin" ? "/admin" : "/";
   return redirect(redirectTo, {
     headers: { "Set-Cookie": await commitSession(session) },
   });
@@ -68,9 +68,9 @@ export async function action({ request }) {
 
 export default function LoginPage({ actionData }) {
   let fieldErrors = actionData?.fieldErrors || {};
-  const [showPassword, setShowPassword] = useState(false);
+  let [showPassword, setShowPassword] = useState(false);
 
-  const togglePasswordVisibility = () => {
+  let togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 

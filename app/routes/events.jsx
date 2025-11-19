@@ -4,20 +4,20 @@ import { data, Link } from "react-router";
 import { getEvents } from "../models/events";
 
 // Define your brand colors
-const primaryColor = "#095075";
-const accentColor = "#b8932f";
+let primaryColor = "#095075";
+let accentColor = "#b8932f";
 
 // Helper to format date/time
-const formatDateTime = (isoDate) => {
-  const date = new Date(isoDate);
+let formatDateTime = (isoDate) => {
+  let date = new Date(isoDate);
   // Separate day number and month abbreviation for the badge
-  const dayNum = date.toLocaleDateString(undefined, { day: "numeric" });
-  const monthAbbr = date.toLocaleDateString(undefined, { month: "short" });
+  let dayNum = date.toLocaleDateString(undefined, { day: "numeric" });
+  let monthAbbr = date.toLocaleDateString(undefined, { month: "short" });
 
   // Combine for the main date display
-  const fullDatePart = `${monthAbbr} ${dayNum}`;
+  let fullDatePart = `${monthAbbr} ${dayNum}`;
 
-  const timePart = date.toLocaleTimeString(undefined, {
+  let timePart = date.toLocaleTimeString(undefined, {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
@@ -31,7 +31,7 @@ const formatDateTime = (isoDate) => {
 };
 
 // Helper to truncate description for summary view
-const truncateDescription = (description, limit = 85) => {
+let truncateDescription = (description, limit = 85) => {
   if (!description || description.length <= limit) return description;
   let truncated = description.substring(0, limit);
   // Ensure we don't cut off a word awkwardly
@@ -39,9 +39,9 @@ const truncateDescription = (description, limit = 85) => {
   return truncated;
 };
 export async function loader() {
-  const results = await getEvents();
+  let results = await getEvents();
 
-  const events = results
+  let events = results
     .map((event) => ({
       ...event,
       _id: event._id.toString(),
@@ -55,26 +55,26 @@ export async function loader() {
 
 export default function EventsListingPage({ loaderData }) {
   let { events } = loaderData;
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  let [searchTerm, setSearchTerm] = useState("");
+  let [selectedCategory, setSelectedCategory] = useState("All");
 
   // Extract unique categories for filtering
-  const allCategories = useMemo(() => {
+  let allCategories = useMemo(() => {
     // Assuming eventsData is available
-    const categories = new Set(events.map((event) => event.category));
+    let categories = new Set(events.map((event) => event.category));
     return ["All", ...Array.from(categories)].sort();
   }, []);
 
   // Filter events based on search term and category
-  const filteredEvents = useMemo(() => {
+  let filteredEvents = useMemo(() => {
     return events.filter((event) => {
       // 1. Category Filter
       if (selectedCategory !== "All" && event.category !== selectedCategory) {
         return false;
       }
       // 2. Search Term Filter (checks title, description, category, and location)
-      const lowerCaseSearch = searchTerm.toLowerCase();
-      const eventDescription = event.description || ""; // Handle missing description
+      let lowerCaseSearch = searchTerm.toLowerCase();
+      let eventDescription = event.description || ""; // Handle missing description
 
       return (
         event.title.toLowerCase().includes(lowerCaseSearch) ||
@@ -86,21 +86,21 @@ export default function EventsListingPage({ loaderData }) {
   }, [searchTerm, selectedCategory]);
 
   // Function to get the primary fee/price string
-  const getFeeString = (event) => {
+  let getFeeString = (event) => {
     if (event.isFree) return "FREE ENTRY";
     // Check if feeStructure exists and has prices
-    const prices =
+    let prices =
       event.feeStructure?.filter((f) => f.price).map((f) => f.price) || [];
 
     if (prices.length > 0) {
-      const minPrice = Math.min(...prices);
+      let minPrice = Math.min(...prices);
       return `Ksh ${minPrice.toLocaleString("en-US")}+`;
     }
     return "Ticketed";
   };
 
   // Function to generate a color for the date badge based on price
-  const getDateColor = (event) => {
+  let getDateColor = (event) => {
     if (event.isFree) return "bg-green-500 text-white";
     return `bg-[${accentColor}] text-gray-900`; // Gold accent
   };
@@ -256,11 +256,11 @@ export default function EventsListingPage({ loaderData }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredEvents.length > 0 ? (
             filteredEvents.map((event, i) => {
-              const { date, time, badgeDay, badgeMonth } = formatDateTime(
+              let { date, time, badgeDay, badgeMonth } = formatDateTime(
                 event.date
               );
-              const cardDateColor = getDateColor(event);
-              const truncatedDesc = truncateDescription(event.description);
+              let cardDateColor = getDateColor(event);
+              let truncatedDesc = truncateDescription(event.description);
 
               return (
                 <Link

@@ -1,11 +1,11 @@
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+export let stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function createCheckoutSession(request) {
   try {
-    const formData = await request.formData();
-    const priceId = formData.get("priceId");
+    let formData = await request.formData();
+    let priceId = formData.get("priceId");
 
     if (!priceId) {
       return new Response(JSON.stringify({ error: "Missing priceId" }), {
@@ -14,9 +14,9 @@ export async function createCheckoutSession(request) {
       });
     }
 
-    const origin = new URL(request.url).origin;
+    let origin = new URL(request.url).origin;
 
-    const session = await stripe.checkout.sessions.create({
+    let session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],

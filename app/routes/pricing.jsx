@@ -3,8 +3,8 @@ import { useState } from "react";
 import { createCheckoutSession } from "../.server/stripe";
 
 export async function action({ request }) {
-  const stripeResponse = await createCheckoutSession(request);
-  const data = await stripeResponse.json();
+  let stripeResponse = await createCheckoutSession(request);
+  let data = await stripeResponse.json();
 
   if (data.url) {
     return redirect(data.url);
@@ -14,12 +14,12 @@ export async function action({ request }) {
 }
 
 export default function Pricing() {
-  const navigation = useNavigation();
-  const [selectedPlan, setSelectedPlan] = useState(
+  let navigation = useNavigation();
+  let [selectedPlan, setSelectedPlan] = useState(
     "price_1SUV9e8RktIVJyUTAuaXiR1V"
   );
 
-  const plans = [
+  let plans = [
     {
       id: "price_1SUV9e8RktIVJyUTAuaXiR1V",
       name: "Basic",

@@ -10,15 +10,15 @@ import {
 import bcrypt from "bcryptjs";
 import { addUser, getUserByEmail } from "../models/user";
 
-const primaryColor = "#095075"; // Dark Blue
-const accentColor = "#b8932f"; // Gold/Bronze
+let primaryColor = "#095075"; // Dark Blue
+let accentColor = "#b8932f"; // Gold/Bronze
 
 export async function action({ request }) {
-  const formData = await request.formData();
-  const name = formData.get("name");
-  const email = (formData.get("email") || "").trim().toLowerCase();
-  const password = formData.get("password");
-  const confirmPassword = formData.get("confirmPassword");
+  let formData = await request.formData();
+  let name = formData.get("name");
+  let email = (formData.get("email") || "").trim().toLowerCase();
+  let password = formData.get("password");
+  let confirmPassword = formData.get("confirmPassword");
 
   let fieldErrors = {
     name: validateText(name),
@@ -31,7 +31,7 @@ export async function action({ request }) {
     return { errors: fieldErrors };
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  let hashedPassword = await bcrypt.hash(password, 10);
 
   let user = {
     name,
@@ -43,12 +43,12 @@ export async function action({ request }) {
 
   try {
     // Check if email already exists
-    const existingUser = await getUserByEmail(email);
+    let existingUser = await getUserByEmail(email);
     if (existingUser) {
       return { errors: { email: "Email already in use" } };
     }
 
-    const result = await addUser(user);
+    let result = await addUser(user);
     if (result.acknowledged) {
       return redirect("/login");
     }
@@ -61,30 +61,30 @@ export async function action({ request }) {
 }
 
 export default function SignUpPage() {
-  const actionData = useActionData();
-  const errors = actionData?.errors || {};
-  const success = actionData?.success;
-  const navigate = useNavigate();
-  const isSubmitting = navigate.state === "submitting";
+  let actionData = useActionData();
+  let errors = actionData?.errors || {};
+  let success = actionData?.success;
+  let navigate = useNavigate();
+  let isSubmitting = navigate.state === "submitting";
 
   // State for password visibility
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  let [showPassword, setShowPassword] = useState(false);
+  let [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const togglePasswordVisibility = () => {
+  let togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const toggleConfirmPasswordVisibility = () => {
+  let toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
   // DRY focus/blur handlers
-  const handleFocus = (e) => {
+  let handleFocus = (e) => {
     e.target.classList.add("ring-2", "ring-offset-1", "ring-yellow-300");
   };
 
-  const handleBlur = (e, error) => {
+  let handleBlur = (e, error) => {
     e.target.classList.remove("ring-2", "ring-offset-1", "ring-yellow-300");
     if (error) {
       e.target.classList.add("border-red-500");

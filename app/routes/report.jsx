@@ -17,11 +17,11 @@ import {
 } from "../models/events";
 
 export async function loader() {
-  const eventStats = await getEventStats();
-  const users = await getEvents();
-  const totalUsers = users.length;
+  let eventStats = await getEventStats();
+  let users = await getEvents();
+  let totalUsers = users.length;
 
-  const categories = [
+  let categories = [
     "Concerts & Nightlife",
     "Charity & Community",
     "Wellness & Fitness",
@@ -31,14 +31,14 @@ export async function loader() {
     "Offers & Discounts",
     "Sports",
   ];
-  const eventsByCategory = {};
+  let eventsByCategory = {};
   for (let cat of categories) {
-    const events = await getEventsByCategory(cat);
+    let events = await getEventsByCategory(cat);
     eventsByCategory[cat] = events.length;
   }
 
   // Recent events (last 5)
-  const recentEvents = await getEventsByCategory(null); // get all
+  let recentEvents = await getEventsByCategory(null); // get all
   recentEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return {
@@ -50,21 +50,21 @@ export async function loader() {
 }
 
 export default function Reports() {
-  const { eventStats, totalUsers, eventsByCategory, recentEvents } =
+  let { eventStats, totalUsers, eventsByCategory, recentEvents } =
     useLoaderData();
 
-  const colors = {
+  let colors = {
     approved: "#41a539",
     pending: "#fbbf24",
     rejected: "#ef4444",
   };
-  const pieData = [
+  let pieData = [
     { name: "Approved", value: eventStats.approved },
     { name: "Pending", value: eventStats.pending },
     { name: "Rejected", value: eventStats.rejected },
   ];
 
-  const barData = Object.entries(eventsByCategory).map(([name, value]) => ({
+  let barData = Object.entries(eventsByCategory).map(([name, value]) => ({
     name,
     value,
   }));

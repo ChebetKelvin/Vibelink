@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router"; // <-- use Link for SPA navigation
 
-const categories = [
+let categories = [
   {
     name: "Student & Campus",
     icon: Globe,
@@ -69,8 +69,7 @@ const categories = [
   },
 ];
 
-// Helper: slugify category name for URL
-const slugify = (name) =>
+let slugify = (name) =>
   name
     .toLowerCase()
     .replace(/ & /g, "-")
@@ -78,22 +77,22 @@ const slugify = (name) =>
     .replace(/\s+/g, "-");
 
 export default function CategorySection() {
-  const [visibleCards, setVisibleCards] = useState({});
-  const cardRefs = useRef([]);
-  const [titleVisible, setTitleVisible] = useState(false);
+  let [visibleCards, setVisibleCards] = useState({});
+  let cardRefs = useRef([]);
+  let [titleVisible, setTitleVisible] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setTitleVisible(true), 100);
+    let timer = setTimeout(() => setTitleVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    let observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const index = entry.target.getAttribute("data-index");
-            const delay = parseInt(index) * 150;
+            let index = entry.target.getAttribute("data-index");
+            let delay = parseInt(index) * 150;
             setTimeout(() => {
               setVisibleCards((prev) => ({ ...prev, [index]: true }));
             }, delay);
@@ -128,8 +127,8 @@ export default function CategorySection() {
 
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
           {categories.map((category, i) => {
-            const Icon = category.icon;
-            const slug = slugify(category.name);
+            let Icon = category.icon;
+            let slug = slugify(category.name);
 
             return (
               <Link

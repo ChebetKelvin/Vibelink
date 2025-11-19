@@ -1,7 +1,7 @@
 // src/components/Testimonials.jsx
 import { Star } from "lucide-react"; // Icon for rating
 
-const testimonials = [
+let testimonials = [
   {
     quote:
       "VibeLink made planning our campus festival simple. Everything was handled seamlessly, from ticket sales to event promotion. Highly recommended for student organizers!",
@@ -31,11 +31,11 @@ const testimonials = [
   },
 ];
 
-const accentColor = "#b8932f"; // Based on your 'Vibe' highlight
+let accentColor = "#b8932f"; // Based on your 'Vibe' highlight
 
 export default function Testimonials() {
   // Component for displaying the star rating
-  const StarRating = ({ rating }) => (
+  let StarRating = ({ rating }) => (
     <div className="flex items-center mb-3">
       {[...Array(5)].map((_, i) => (
         <Star

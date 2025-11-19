@@ -5,10 +5,10 @@ import { addEvent } from "../models/events";
 import { getSession } from "../.server/session";
 
 export async function action({ request }) {
-  const formData = await request.formData();
-  const errors = [];
+  let formData = await request.formData();
+  let errors = [];
 
-  const requiredFields = [
+  let requiredFields = [
     "title",
     "category",
     "date",
@@ -26,8 +26,8 @@ export async function action({ request }) {
     if (!formData.get(field)) errors.push(`${field} is required`);
   });
 
-  const isFree = formData.get("isFree") === "true";
-  const ticketPrice = formData.get("ticketPrice");
+  let isFree = formData.get("isFree") === "true";
+  let ticketPrice = formData.get("ticketPrice");
   if (!isFree && (!ticketPrice || Number(ticketPrice) <= 0)) {
     errors.push(
       "Ticket price must be provided and greater than 0 for paid events"
@@ -35,7 +35,7 @@ export async function action({ request }) {
   }
 
   // Validate image URL format
-  const imageUrl = formData.get("imageUrl");
+  let imageUrl = formData.get("imageUrl");
   if (imageUrl) {
     try {
       new URL(imageUrl); // This will throw if not a valid URL
@@ -47,7 +47,7 @@ export async function action({ request }) {
   if (errors.length > 0) return { errors };
 
   // Now create the event with imageUrl instead of image upload
-  const newEvent = {
+  let newEvent = {
     title: formData.get("title"),
     category: formData.get("category"),
     date: new Date(formData.get("date")),
@@ -75,10 +75,10 @@ export async function action({ request }) {
 
 export async function loader({ request }) {
   // Get cookies from request
-  const cookieHeader = request.headers.get("Cookie");
-  const session = await getSession(cookieHeader);
+  let cookieHeader = request.headers.get("Cookie");
+  let session = await getSession(cookieHeader);
 
-  const user = session?.get("user");
+  let user = session?.get("user");
 
   if (!user) {
     return redirect("/login");
@@ -88,12 +88,12 @@ export async function loader({ request }) {
 }
 
 export default function AddEvent() {
-  const [imagePreview, setImagePreview] = useState(null);
-  const actionData = useActionData();
+  let [imagePreview, setImagePreview] = useState(null);
+  let actionData = useActionData();
   let { user } = useLoaderData();
 
-  const handleImageUrlChange = (e) => {
-    const url = e.target.value;
+  let handleImageUrlChange = (e) => {
+    let url = e.target.value;
     if (url) {
       setImagePreview(url);
     } else {

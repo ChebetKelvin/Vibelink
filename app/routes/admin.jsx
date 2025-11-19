@@ -5,13 +5,13 @@ import { useLoaderData } from "react-router";
 import { getEventStats } from "../models/events";
 
 export async function loader() {
-  const stats = await getEventStats();
+  let stats = await getEventStats();
   return { stats };
 }
 
 export default function AdminLayout() {
-  const { stats } = useLoaderData();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  let { stats } = useLoaderData();
+  let [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-gray-50 ">
@@ -112,7 +112,7 @@ export default function AdminLayout() {
 }
 
 function StatCard({ label, value, color }) {
-  const colorMap = {
+  let colorMap = {
     blue: "bg-blue-100 text-blue-800",
     green: "bg-green-100 text-green-800",
     yellow: "bg-yellow-100 text-yellow-800",

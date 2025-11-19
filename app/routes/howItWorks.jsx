@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 
 export default function HowItWorks() {
-  const steps = [
+  let steps = [
     {
       title: "Discover Events",
       description:

@@ -17,9 +17,9 @@ import { useState } from "react";
 
 // --- Loader: fetch all users
 export async function loader() {
-  const users = await getUsers();
+  let users = await getUsers();
 
-  const formattedUsers = users.map((user) => ({
+  let formattedUsers = users.map((user) => ({
     ...user,
     _id: user._id.toString(),
   }));
@@ -29,21 +29,21 @@ export async function loader() {
 
 // --- Action: handle promote/demote/delete
 export async function action({ request }) {
-  const formData = await request.formData();
-  const _action = formData.get("_action");
+  let formData = await request.formData();
+  let _action = formData.get("_action");
 
   if (_action.startsWith("promote-")) {
-    const id = _action.replace("promote-", "");
+    let id = _action.replace("promote-", "");
     await updateUserRole(id, "admin");
   }
 
   if (_action.startsWith("demote-")) {
-    const id = _action.replace("demote-", "");
+    let id = _action.replace("demote-", "");
     await updateUserRole(id, "user");
   }
 
   if (_action.startsWith("delete-")) {
-    const id = _action.replace("delete-", "");
+    let id = _action.replace("delete-", "");
     await deleteUser(id);
   }
 
@@ -51,20 +51,20 @@ export async function action({ request }) {
 }
 
 export default function Users() {
-  const { users } = useLoaderData();
-  const [searchTerm, setSearchTerm] = useState("");
+  let { users } = useLoaderData();
+  let [searchTerm, setSearchTerm] = useState("");
 
   // Filtered users for search
-  const filteredUsers = users.filter(
+  let filteredUsers = users.filter(
     (u) =>
       u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Gradient helper
-  const gradient = (from, to) => `bg-linear-to-r from-${from} to-${to}`;
+  let gradient = (from, to) => `bg-linear-to-r from-${from} to-${to}`;
 
-  const handleDelete = (e, userName) => {
+  let handleDelete = (e, userName) => {
     if (!confirm(`Are you sure you want to delete ${userName}?`)) {
       e.preventDefault();
     }

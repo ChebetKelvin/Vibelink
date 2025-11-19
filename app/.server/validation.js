@@ -33,7 +33,7 @@ export function validateConfirmPassword(password, confirmPassword) {
 }
 
 export function validatePhone(phone) {
-  const phoneRegex = /^(07|01)\d{8}$/;
+  let phoneRegex = /^(07|01)\d{8}$/;
   if (!phone) return "Phone number is required";
   if (!phoneRegex.test(phone)) {
     return "Phone number must start with 07 or 01 and be 10 digits long";

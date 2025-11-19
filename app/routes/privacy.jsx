@@ -1,5 +1,5 @@
 export default function Privacy() {
-  const privacySections = [
+  let privacySections = [
     {
       title: "Information Collection",
       icon: "📥",

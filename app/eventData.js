@@ -1,6 +1,6 @@
 // src/data/eventsData.js
 
-const events = [
+let events = [
   // --- CATEGORY 1: CONCERTS & NIGHTLIFE (The 'Party People' Vibe) ---
   {
     eventId: "p_001",

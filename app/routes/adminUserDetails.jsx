@@ -14,14 +14,14 @@ import {
 import { getUserById } from "../models/user";
 
 export async function loader({ params }) {
-  const user = await getUserById(params.id);
+  let user = await getUserById(params.id);
 
   if (!user) {
     throw new Response("User not found", { status: 404 });
   }
 
   // Convert _id to string
-  const userData = {
+  let userData = {
     ...user,
     _id: user._id.toString(),
   };
@@ -30,8 +30,8 @@ export async function loader({ params }) {
 }
 
 export async function action({ request, params }) {
-  const formData = await request.formData();
-  const _action = formData.get("_action");
+  let formData = await request.formData();
+  let _action = formData.get("_action");
 
   if (_action === "promote") await updateUserRole(params.id, "admin");
   if (_action === "demote") await updateUserRole(params.id, "user");
@@ -41,7 +41,7 @@ export async function action({ request, params }) {
 }
 
 export default function UserDetail() {
-  const { user } = useLoaderData();
+  let { user } = useLoaderData();
 
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-100 p-6 md:p-8">

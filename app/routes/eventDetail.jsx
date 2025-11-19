@@ -19,8 +19,8 @@ import { getEventById, getEventsByCategory } from "../models/events";
 import { useState } from "react";
 
 // Category color mapping
-const getCategoryColor = (category) => {
-  const colors = {
+let getCategoryColor = (category) => {
+  let colors = {
     "Concerts & Nightlife": "from-purple-500 to-pink-500",
     "Charity & Community": "from-green-500 to-teal-500",
     "Wellness & Fitness": "from-blue-500 to-cyan-500",
@@ -35,13 +35,13 @@ const getCategoryColor = (category) => {
 
 // Loader function to fetch event by _id
 export async function loader({ params }) {
-  const { id } = params;
+  let { id } = params;
 
-  const event = await getEventById(id); // fetch the main event
+  let event = await getEventById(id); // fetch the main event
   if (!event) throw new Response("Event Not Found", { status: 404 });
 
   // Fetch similar events from the DB
-  const similarEvents = await getEventsByCategory(event.category, id);
+  let similarEvents = await getEventsByCategory(event.category, id);
   // make sure this function excludes the main event
 
   return {
@@ -54,15 +54,15 @@ export async function loader({ params }) {
 }
 
 export default function EventDetail({ loaderData }) {
-  const { id } = useParams();
-  const { event, similarEvents } = loaderData;
-  const [liked, setLiked] = useState(false);
-  const [copied, setCopied] = useState(false);
+  let { id } = useParams();
+  let { event, similarEvents } = loaderData;
+  let [liked, setLiked] = useState(false);
+  let [copied, setCopied] = useState(false);
 
-  const handleShare = async () => {
-    const url = window.location.href;
+  let handleShare = async () => {
+    let url = window.location.href;
 
-    const shareData = {
+    let shareData = {
       title: event.title,
       text: `Check out this event: ${event.title}`,
       url,
@@ -120,26 +120,26 @@ export default function EventDetail({ loaderData }) {
   }
 
   // Format dates and times
-  const date = new Date(event.date);
-  const formattedDate = date.toLocaleDateString(undefined, {
+  let date = new Date(event.date);
+  let formattedDate = date.toLocaleDateString(undefined, {
     weekday: "long",
     month: "long",
     day: "numeric",
     year: "numeric",
   });
-  const formattedTime = date.toLocaleTimeString(undefined, {
+  let formattedTime = date.toLocaleTimeString(undefined, {
     hour: "2-digit",
     minute: "2-digit",
   });
 
-  const today = new Date();
-  const daysUntilEvent = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
-  const isHappeningSoon = daysUntilEvent <= 7;
-  const isToday = daysUntilEvent === 0;
+  let today = new Date();
+  let daysUntilEvent = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
+  let isHappeningSoon = daysUntilEvent <= 7;
+  let isToday = daysUntilEvent === 0;
 
-  const formatDuration = (minutes) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
+  let formatDuration = (minutes) => {
+    let hours = Math.floor(minutes / 60);
+    let mins = minutes % 60;
     return hours > 0 ? `${hours}h ${mins > 0 ? `${mins}m` : ""}` : `${mins}m`;
   };
   return (

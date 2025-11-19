@@ -28,7 +28,7 @@ export async function deleteEvent(id) {
 }
 
 export async function getEventsByCategory(category, excludeId = null) {
-  const filter = {
+  let filter = {
     category,
     status: "approved", // Only fetch approved events
   };
@@ -43,10 +43,10 @@ export async function getEventsByCategory(category, excludeId = null) {
 
 export async function getEventStats() {
   try {
-    const total = await collection.countDocuments();
-    const approved = await collection.countDocuments({ status: "approved" });
-    const pending = await collection.countDocuments({ status: "pending" });
-    const rejected = await collection.countDocuments({ status: "rejected" });
+    let total = await collection.countDocuments();
+    let approved = await collection.countDocuments({ status: "approved" });
+    let pending = await collection.countDocuments({ status: "pending" });
+    let rejected = await collection.countDocuments({ status: "rejected" });
 
     return { total, approved, pending, rejected };
   } catch (error) {
@@ -58,7 +58,7 @@ export async function getEventStats() {
 // UPDATED FUNCTIONS - Using MongoDB native driver syntax
 export async function getEventsByOrganizer(organizerEmail) {
   try {
-    const events = await collection
+    let events = await collection
       .find({
         contact: organizerEmail,
       })
@@ -73,9 +73,9 @@ export async function getEventsByOrganizer(organizerEmail) {
 
 export async function getUserEventStats(organizerEmail) {
   try {
-    const events = await getEventsByOrganizer(organizerEmail);
+    let events = await getEventsByOrganizer(organizerEmail);
 
-    const stats = {
+    let stats = {
       eventsCreated: events.length,
       eventsAttended: 0, // You can implement attendance tracking later
       approvedEvents: events.filter((e) => e.status === "approved").length,
@@ -98,20 +98,20 @@ export async function getUserEventStats(organizerEmail) {
 
 export async function getUserFavoriteCategories(organizerEmail) {
   try {
-    const events = await getEventsByOrganizer(organizerEmail);
+    let events = await getEventsByOrganizer(organizerEmail);
 
     if (events.length === 0) {
       return ["No events yet"];
     }
 
     // Count categories
-    const categoryCount = {};
+    let categoryCount = {};
     events.forEach((event) => {
       categoryCount[event.category] = (categoryCount[event.category] || 0) + 1;
     });
 
     // Get top 3 categories
-    const favoriteCategories = Object.entries(categoryCount)
+    let favoriteCategories = Object.entries(categoryCount)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 3)
       .map(([category]) => category);

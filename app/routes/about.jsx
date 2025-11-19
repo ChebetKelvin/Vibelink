@@ -131,7 +131,7 @@ export default function About() {
                 <div>
                   <h4 className="font-semibold text-slate-800">Innovation</h4>
                   <p className="text-slate-600 text-sm">
-                    Constantly evolving to meet organizer needs
+                    letantly evolving to meet organizer needs
                   </p>
                 </div>
               </div>

@@ -19,9 +19,9 @@ export function meta() {
 
 // ✅ SERVER-SIDE LOADER
 export async function loader() {
-  const results = await getEvents();
+  let results = await getEvents();
 
-  const events = results.map((event) => ({
+  let events = results.map((event) => ({
     ...event,
     _id: event._id.toString(),
   }));
@@ -31,15 +31,15 @@ export async function loader() {
 
 export default function Home() {
   // ✅ Access data from loader
-  const { events } = useLoaderData();
+  let { events } = useLoaderData();
 
-  const formatDateTime = (isoDate) => {
-    const date = new Date(isoDate);
-    const datePart = date.toLocaleDateString(undefined, {
+  let formatDateTime = (isoDate) => {
+    let date = new Date(isoDate);
+    let datePart = date.toLocaleDateString(undefined, {
       day: "numeric",
       month: "short",
     });
-    const timePart = date.toLocaleTimeString(undefined, {
+    let timePart = date.toLocaleTimeString(undefined, {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -47,8 +47,8 @@ export default function Home() {
   };
 
   // ✅ Filter only upcoming events (next 8)
-  const now = new Date();
-  const upcomingEvents = events
+  let now = new Date();
+  let upcomingEvents = events
     .filter((e) => new Date(e.date) >= now)
     .sort((a, b) => new Date(a.date) - new Date(b.date))
     .slice(0, 8);
@@ -76,10 +76,10 @@ export default function Home() {
           {/* Grid Container */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {upcomingEvents.map((event) => {
-              const { date, time } = formatDateTime(event.date);
-              const dateParts = date.split(" ");
-              const badgeDay = dateParts[0];
-              const badgeMonth = dateParts[1]?.toUpperCase() || "";
+              let { date, time } = formatDateTime(event.date);
+              let dateParts = date.split(" ");
+              let badgeDay = dateParts[0];
+              let badgeMonth = dateParts[1]?.toUpperCase() || "";
 
               return (
                 <a

@@ -29,28 +29,28 @@ import {
 
 // In src/pages/Profile.jsx loader
 export async function loader({ request }) {
-  const cookieHeader = request.headers.get("Cookie");
-  const session = await getSession(cookieHeader);
-  const user = session?.get("user");
+  let cookieHeader = request.headers.get("Cookie");
+  let session = await getSession(cookieHeader);
+  let user = session?.get("user");
 
   if (!user) {
     return redirect("/login");
   }
 
   try {
-    const [events, eventStats, favoriteCategories] = await Promise.all([
+    let [events, eventStats, favoriteCategories] = await Promise.all([
       getEventsByOrganizer(user.email),
       getUserEventStats(user.email),
       getUserFavoriteCategories(user.email),
     ]);
 
     // Handle events without createdAt field
-    const eventsWithDates = events.map((event) => ({
+    let eventsWithDates = events.map((event) => ({
       ...event,
       createdAt: event.createdAt || event.date || new Date().toISOString(),
     }));
 
-    const memberSince = user.createdAt || new Date().toISOString();
+    let memberSince = user.createdAt || new Date().toISOString();
 
     return {
       user,
@@ -77,12 +77,12 @@ export async function loader({ request }) {
   }
 }
 export async function action({ request }) {
-  const formData = await request.formData();
-  const cookieHeader = request.headers.get("Cookie");
-  const session = await getSession(cookieHeader);
+  let formData = await request.formData();
+  let cookieHeader = request.headers.get("Cookie");
+  let session = await getSession(cookieHeader);
 
   // Handle profile updates here
-  const updates = {
+  let updates = {
     name: formData.get("name"),
     email: formData.get("email"),
     phone: formData.get("phone"),
@@ -95,13 +95,13 @@ export async function action({ request }) {
 }
 
 export default function Profile() {
-  const { user, events, eventStats, favoriteCategories, memberSince } =
+  let { user, events, eventStats, favoriteCategories, memberSince } =
     useLoaderData();
-  const [isEditing, setIsEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState("profile");
+  let [isEditing, setIsEditing] = useState(false);
+  let [activeTab, setActiveTab] = useState("profile");
 
   // Use dynamic stats
-  const userStats = {
+  let userStats = {
     eventsCreated: eventStats.eventsCreated,
     eventsAttended: eventStats.eventsAttended, // You can implement attendance tracking
     approvedEvents: eventStats.approvedEvents,
@@ -114,7 +114,7 @@ export default function Profile() {
   };
 
   // Use actual user events
-  const recentEvents = events.slice(0, 5).map((event) => ({
+  let recentEvents = events.slice(0, 5).map((event) => ({
     id: event._id,
     title: event.title,
     date: event.date,

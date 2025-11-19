@@ -23,12 +23,12 @@ import {
 } from "../models/events";
 
 export async function action({ request }) {
-  const formData = await request.formData();
-  const actionValue = formData.get("_action");
+  let formData = await request.formData();
+  let actionValue = formData.get("_action");
 
   if (!actionValue) return null;
 
-  const [action, id] = actionValue.split("-");
+  let [action, id] = actionValue.split("-");
 
   switch (action) {
     case "approve":
@@ -48,31 +48,31 @@ export async function action({ request }) {
 }
 
 export async function loader({ request }) {
-  const url = new URL(request.url);
-  const page = parseInt(url.searchParams.get("page")) || 1;
-  const pageSize = 10;
+  let url = new URL(request.url);
+  let page = parseInt(url.searchParams.get("page")) || 1;
+  let pageSize = 10;
 
-  const [events, total] = await Promise.all([
+  let [events, total] = await Promise.all([
     getEvents({ page, pageSize }),
     getEventsCount(),
   ]);
 
-  const eventsData = events.map((e) => ({
+  let eventsData = events.map((e) => ({
     ...e,
     _id: e._id.toString(),
   }));
 
-  const totalPages = Math.ceil(total / pageSize);
+  let totalPages = Math.ceil(total / pageSize);
 
   return { events: eventsData, page, totalPages };
 }
 
 export default function ManageEvents() {
-  const { events, page, totalPages } = useLoaderData();
-  const navigate = useNavigate();
+  let { events, page, totalPages } = useLoaderData();
+  let navigate = useNavigate();
 
   // Calculate stats for the header
-  const stats = {
+  let stats = {
     total: events.length,
     approved: events.filter((e) => e.status === "approved").length,
     pending: events.filter((e) => e.status === "pending").length,

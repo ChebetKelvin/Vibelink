@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 export async function loader({ params }) {
-  const event = await getEventById(params.id);
+  let event = await getEventById(params.id);
   if (!event) {
     throw new Response("Event not found", { status: 404 });
   }
@@ -29,8 +29,8 @@ export async function loader({ params }) {
 }
 
 export async function action({ request, params }) {
-  const formData = await request.formData();
-  const action = formData.get("_action");
+  let formData = await request.formData();
+  let action = formData.get("_action");
 
   console.log("Action received:", { action, eventId: params.id });
 
@@ -65,29 +65,29 @@ export async function action({ request, params }) {
 }
 
 export default function EventDetails() {
-  const { event } = useLoaderData();
+  let { event } = useLoaderData();
 
   // Format dates and times
-  const date = new Date(event.date);
-  const formattedDate = date.toLocaleDateString(undefined, {
+  let date = new Date(event.date);
+  let formattedDate = date.toLocaleDateString(undefined, {
     weekday: "long",
     month: "long",
     day: "numeric",
     year: "numeric",
   });
-  const formattedTime = date.toLocaleTimeString(undefined, {
+  let formattedTime = date.toLocaleTimeString(undefined, {
     hour: "2-digit",
     minute: "2-digit",
   });
 
-  const today = new Date();
-  const daysUntilEvent = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
-  const isHappeningSoon = daysUntilEvent <= 7;
-  const isToday = daysUntilEvent === 0;
+  let today = new Date();
+  let daysUntilEvent = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
+  let isHappeningSoon = daysUntilEvent <= 7;
+  let isToday = daysUntilEvent === 0;
 
-  const formatDuration = (minutes) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
+  let formatDuration = (minutes) => {
+    let hours = Math.floor(minutes / 60);
+    let mins = minutes % 60;
     return hours > 0 ? `${hours}h ${mins > 0 ? `${mins}m` : ""}` : `${mins}m`;
   };
 

@@ -3,7 +3,7 @@ import { getEventsByCategory } from "../models/events";
 import { Link, useLoaderData } from "react-router";
 
 // Define your categories
-const categories = [
+let categories = [
   "Concerts & Nightlife",
   "Charity & Community",
   "Wellness & Fitness",
@@ -15,7 +15,7 @@ const categories = [
 ];
 
 // Slug → Category mapping
-const slugToCategory = Object.fromEntries(
+let slugToCategory = Object.fromEntries(
   categories.map((cat) => [
     cat.toLowerCase().replace(/ & /g, "-").replace(/\s+/g, "-"),
     cat,
@@ -23,21 +23,21 @@ const slugToCategory = Object.fromEntries(
 );
 
 export async function loader({ params }) {
-  const { category: slug } = params;
-  const categoryName = slugToCategory[slug];
+  let { category: slug } = params;
+  let categoryName = slugToCategory[slug];
 
   if (!categoryName) return { events: [] };
 
   try {
-    const eventsFromDb = await getEventsByCategory(categoryName);
+    let eventsFromDb = await getEventsByCategory(categoryName);
 
     // Filter only approved events
-    const approvedEvents = eventsFromDb.filter(
+    let approvedEvents = eventsFromDb.filter(
       (event) => event.status === "approved"
     );
 
     // Convert ObjectId to string
-    const events = approvedEvents.map((event) => ({
+    let events = approvedEvents.map((event) => ({
       ...event,
       _id: event._id.toString(),
     }));
@@ -50,7 +50,7 @@ export async function loader({ params }) {
 }
 
 export default function CategoryPage() {
-  const { events, categoryName } = useLoaderData();
+  let { events, categoryName } = useLoaderData();
 
   if (!categoryName)
     return <p className="p-6 text-center">Invalid category.</p>;

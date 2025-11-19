@@ -1,5 +1,5 @@
 export default function Hero() {
-  const heroImage = {
+  let heroImage = {
     src: "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?auto=format&fit=crop&w=1600&q=70",
     alt: "A vibrant crowd with their hands raised, enjoying a concert or festival.",
   };
@@ -20,12 +20,9 @@ export default function Hero() {
         loading="eager"
       />
 
-      {/* Overlay - Ensures text contrast and visual depth */}
       <div className="absolute inset-0 bg-black/40"></div>
 
-      {/* Content (Removed opacity/transform transitions that relied on the JS state) */}
       <div className="relative z-10 text-center text-white px-6 md:px-12 max-w-4xl">
-        {/* DESIGN IMPROVEMENT: Refined Typography */}
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold mb-4 leading-tight tracking-tight">
           Experience Every <span className="text-[#b8932f]">Vibe</span> Near You
         </h1>
@@ -33,9 +30,7 @@ export default function Hero() {
           All Your Plans in One Place. Discover What's Happening Now.
         </p>
 
-        {/* DESIGN IMPROVEMENT: Button Styling */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          {/* FIX: Replaced <Link> with <a> to resolve the routing context error */}
           <a
             href="/events"
             className="
@@ -46,7 +41,6 @@ export default function Hero() {
           >
             Explore Events
           </a>
-          {/* FIX: Replaced <Link> with <a> to resolve the routing context error */}
           <a
             href="/add-event"
             className="

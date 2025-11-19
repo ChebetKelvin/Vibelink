@@ -2,13 +2,13 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 export default function HostFAQ() {
-  const [open, setOpen] = useState(null);
+  let [open, setOpen] = useState(null);
 
-  const toggle = (index) => {
+  let toggle = (index) => {
     setOpen(open === index ? null : index);
   };
 
-  const faqs = [
+  let faqs = [
     {
       q: "What is VibeLink and how does it help hosts?",
       a: "VibeLink allows event organizers to post and promote events easily. It gives your event visibility, helps you reach your audience, and allows you to track views and ticket clicks depending on your plan.",

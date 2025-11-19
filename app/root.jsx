@@ -16,7 +16,7 @@ import logo from "/vibelink-logo.png";
 import Footer from "./components/Footer";
 import { getSession, commitSession } from "./.server/session";
 
-export const links = () => [
+export let links = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
@@ -45,11 +45,11 @@ export async function loader({ request }) {
 
 // Create a separate Navbar component that uses the loader data
 function Navbar() {
-  const { user } = useLoaderData();
-  const [isOpen, setIsOpen] = useState(false);
-  const [showCategories, setShowCategories] = useState(false);
+  let { user } = useLoaderData();
+  let [isOpen, setIsOpen] = useState(false);
+  let [showCategories, setShowCategories] = useState(false);
 
-  const categories = [
+  let categories = [
     "Concerts & Nightlife",
     "Charity & Community",
     "Wellness & Fitness",
@@ -58,7 +58,7 @@ function Navbar() {
     "Adventure & Travel",
   ];
 
-  const slugify = (cat) =>
+  let slugify = (cat) =>
     cat.toLowerCase().replace(/ & /g, "-").replace(/\s+/g, "-");
 
   return (

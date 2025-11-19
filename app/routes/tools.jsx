@@ -17,7 +17,7 @@ import {
 } from "recharts";
 
 export default function Tools() {
-  const categories = [
+  let categories = [
     "Concerts & Nightlife",
     "Charity & Community",
     "Wellness & Fitness",
@@ -29,36 +29,36 @@ export default function Tools() {
   ];
 
   // Ticket Calculator state
-  const [ticketPrice, setTicketPrice] = useState("");
-  const [attendees, setAttendees] = useState("");
-  const [expenses, setExpenses] = useState("");
-  const [revenue, setRevenue] = useState(null);
-  const [profit, setProfit] = useState(null);
+  let [ticketPrice, setTicketPrice] = useState("");
+  let [attendees, setAttendees] = useState("");
+  let [expenses, setExpenses] = useState("");
+  let [revenue, setRevenue] = useState(null);
+  let [profit, setProfit] = useState(null);
 
   // Event Analyzer state
-  const [duration, setDuration] = useState("");
-  const [category, setCategory] = useState("");
-  const [budget, setBudget] = useState("");
-  const [reachScore, setReachScore] = useState(null);
-  const [recommendations, setRecommendations] = useState([]);
+  let [duration, setDuration] = useState("");
+  let [category, setCategory] = useState("");
+  let [budget, setBudget] = useState("");
+  let [reachScore, setReachScore] = useState(null);
+  let [recommendations, setRecommendations] = useState([]);
 
   // Chart data
-  const [ticketData, setTicketData] = useState([]);
-  const [eventHistory, setEventHistory] = useState([]);
+  let [ticketData, setTicketData] = useState([]);
+  let [eventHistory, setEventHistory] = useState([]);
 
-  const calculateRevenue = () => {
-    const price = parseFloat(ticketPrice);
-    const num = parseInt(attendees);
-    const exp = parseFloat(expenses) || 0;
+  let calculateRevenue = () => {
+    let price = parseFloat(ticketPrice);
+    let num = parseInt(attendees);
+    let exp = parseFloat(expenses) || 0;
 
     if (!isNaN(price) && !isNaN(num)) {
-      const totalRevenue = price * num;
-      const totalProfit = totalRevenue - exp;
+      let totalRevenue = price * num;
+      let totalProfit = totalRevenue - exp;
 
       setRevenue(totalRevenue);
       setProfit(totalProfit);
 
-      const newEvent = {
+      let newEvent = {
         name: `Event ${ticketData.length + 1}`,
         revenue: totalRevenue,
         profit: totalProfit,
@@ -75,9 +75,9 @@ export default function Tools() {
     }
   };
 
-  const analyzeEvent = () => {
-    const dur = parseInt(duration);
-    const bud = parseFloat(budget) || 0;
+  let analyzeEvent = () => {
+    let dur = parseInt(duration);
+    let bud = parseFloat(budget) || 0;
 
     if (!dur || !category) {
       setReachScore("Fill all fields");
@@ -119,19 +119,19 @@ export default function Tools() {
     setRecommendations(recs);
   };
 
-  const clearData = () => {
+  let clearData = () => {
     setTicketData([]);
     setEventHistory([]);
     setRevenue(null);
     setProfit(null);
   };
 
-  const categoryPerformance = categories
+  let categoryPerformance = categories
     .map((cat) => {
-      const eventsInCategory = eventHistory.filter(
+      let eventsInCategory = eventHistory.filter(
         (event) => event.category === cat
       );
-      const avgRevenue =
+      let avgRevenue =
         eventsInCategory.length > 0
           ? eventsInCategory.reduce((sum, event) => sum + event.revenue, 0) /
             eventsInCategory.length
@@ -145,7 +145,7 @@ export default function Tools() {
     })
     .filter((item) => item.count > 0);
 
-  const COLORS = [
+  let COLORS = [
     "#0088FE",
     "#00C49F",
     "#FFBB28",

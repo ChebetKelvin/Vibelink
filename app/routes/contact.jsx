@@ -16,11 +16,11 @@ import emailjs from "emailjs-com";
 import { useState } from "react";
 
 export default function Contact() {
-  const [loading, setLoading] = useState(false);
+  let [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  let handleSubmit = (e) => {
     e.preventDefault();
-    const form = e.target;
+    let form = e.target;
     setLoading(true);
 
     emailjs

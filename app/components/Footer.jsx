@@ -1,9 +1,9 @@
 // src/components/Footer.jsx
 import { Facebook, Instagram, Twitter, Mail } from "lucide-react";
 
-const primaryColor = "#095075";
-const accentColor = "#b8932f";
-const links = {
+let primaryColor = "#095075";
+let accentColor = "#b8932f";
+let links = {
   discover: [
     { name: "All Events", href: "/events" },
     { name: "Upcoming", href: "/events" },
